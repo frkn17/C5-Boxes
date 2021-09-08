@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head></head>
+
+<body>
+
+    <button id="getShipment">CLICK</button>
+
+    <script>
+        const btn = document.querySelector('#getShipment');
+        var boxes = [{ id: 1, price: 350, mass: 25, used: false },
+        { id: 2, price: 400, mass: 35, used: false },
+        { id: 3, price: 450, mass: 45, used: false },
+        { id: 4, price: 20, mass: 5, used: false },
+        { id: 5, price: 70, mass: 25, used: false },
+        { id: 6, price: 8, mass: 3, used: false },
+        { id: 7, price: 5, mass: 2, used: false },
+        { id: 8, price: 5, mass: 2, used: false },
+        { id: 9, price: 100, mass: 35, used: false },
+        { id: 10, price: 35, mass: 20, used: false },
+        { id: 11, price: 11, mass: 5, used: false }
+        ];
+        const maxCapacity = 104;
+        var currentCapacity = 0;
+        var currentPrice = 0;
+        btn.addEventListener('click', getOptimalShipment);
+
+        var items = [];
+
+
+        function order() {
+            for (let i = 0; i < items.length; i++) {
+                let bridge;
+                for (let j = 0; j < items.length; j++) {
+                    if (items[j].price < items[i].price) {
+                        bridge = items[i];
+                        items[i] = items[j];
+                        items[j] = bridge;
+                    }
+                }
+            }
+
+
+        }
+        var sums;
+
+        function evaluateAllPossibleSums() {
+            sums = [];
+            console.log(avg() * items.length);
+            for (let i = 0; i < items.length; i++) {
+                if ((avg() * items.length) > maxCapacity) {
+                    items[i].used = true;
+                }
+
+                for (let j = 0; j < items.length; j++) {
+                    if (!(items[j].used)) {
+                        if ((currentCapacity + items[j].mass) <= maxCapacity) {
+                            currentPrice += items[j].price;
+                            currentCapacity += items[j].mass;
+
+                        }
+                    }
+                }
+                console.log('---------');
+                sums.push(currentPrice);
+
+                currentPrice = 0;
+                currentCapacity = 0;
+                items[i].used = false;
+            }
+
+        }
+        function findMaximum() {
+            for (let i = 0; i < sums.length; i++) {
+                let bridge;
+                for (let j = 0; j < sums.length; j++) {
+                    if (sums[j] < sums[i]) {
+                        bridge = sums[i];
+                        sums[i] = sums[j];
+                        sums[j] = bridge;
+                    }
+                }
+            }
+            return sums[0];
+        }
+        function makeUsed() {
+            let maximum = findMaximum();
+            let code = '';
+
+            for (let i = 0; i < items.length; i++) {
+                if ((avg() * items.length) > maxCapacity) {
+                    items[i].used = true;
+                }
+
+                for (let j = 0; j < items.length; j++) {
+                    if (!(items[j].used)) {
+                        if ((currentCapacity + items[j].mass) <= maxCapacity) {
+                            currentPrice += items[j].price;
+                            currentCapacity += items[j].mass;
+                            code += `${items[j].id}-`;
+
+                        }
+                    }
+                }
+                items[i].used = false;
+                if (currentPrice == maximum) {
+                    console.log(code);
+                    break;
+                }
+                else {
+                    code = '';
+                }
+                currentPrice = 0;
+                currentCapacity = 0;
+
+            }
+            for (let i = 0; i < boxes.length; i++) {
+                for (let j = 0; j < code.length; j++) {
+                    if (boxes[i].id == Number(code[j])) {
+                        boxes[i].used = true;
+                    }
+                }
+            }
+
+        }
+
+        function instertPackage() {
+            for (let i = 0; i < boxes.length; i++) {
+                if (!(boxes[i].used)) {
+                    items.push(boxes[i]);
+                }
+            }
+        }
+        function avg() {
+            let total = 0;
+            for (let i = 0; i < items.length; i++) {
+                total += items[i].mass;
+            }
+            return total / items.length;
+        }
+        function getOptimalShipment() {
+            instertPackage();
+            order();
+            evaluateAllPossibleSums();
+            makeUsed();
+            console.log(sums);
+            currentPrice = 0;
+            currentCapacity = 0;
+            items = [];
+
+        }
+
+    </script>
+</body>
+
+</html>
