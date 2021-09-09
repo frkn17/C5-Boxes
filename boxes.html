@@ -16,10 +16,7 @@
         { id: 5, price: 70, mass: 25, used: false },
         { id: 6, price: 8, mass: 3, used: false },
         { id: 7, price: 5, mass: 2, used: false },
-        { id: 8, price: 5, mass: 2, used: false },
-        { id: 9, price: 100, mass: 35, used: false },
-        { id: 10, price: 35, mass: 20, used: false },
-        { id: 11, price: 11, mass: 5, used: false }
+        { id: 8, price: 5, mass: 2, used: false }
         ];
         const maxCapacity = 104;
         var currentCapacity = 0;
@@ -47,7 +44,6 @@
 
         function evaluateAllPossibleSums() {
             sums = [];
-            console.log(avg() * items.length);
             for (let i = 0; i < items.length; i++) {
                 if ((avg() * items.length) > maxCapacity) {
                     items[i].used = true;
@@ -62,7 +58,6 @@
                         }
                     }
                 }
-                console.log('---------');
                 sums.push(currentPrice);
 
                 currentPrice = 0;
@@ -87,6 +82,7 @@
         function makeUsed() {
             let maximum = findMaximum();
             let code = '';
+            let codeArray= [];
 
             for (let i = 0; i < items.length; i++) {
                 if ((avg() * items.length) > maxCapacity) {
@@ -98,26 +94,26 @@
                         if ((currentCapacity + items[j].mass) <= maxCapacity) {
                             currentPrice += items[j].price;
                             currentCapacity += items[j].mass;
-                            code += `${items[j].id}-`;
+                            codeArray.push(items[j].id);
 
                         }
                     }
                 }
                 items[i].used = false;
                 if (currentPrice == maximum) {
-                    console.log(code);
+                    console.log(codeArray);
                     break;
                 }
                 else {
-                    code = '';
+                    codeArray = [];
                 }
                 currentPrice = 0;
                 currentCapacity = 0;
 
             }
             for (let i = 0; i < boxes.length; i++) {
-                for (let j = 0; j < code.length; j++) {
-                    if (boxes[i].id == Number(code[j])) {
+                for (let j = 0; j < codeArray.length; j++) {
+                    if (boxes[i].id == Number(codeArray[j])) {
                         boxes[i].used = true;
                     }
                 }
