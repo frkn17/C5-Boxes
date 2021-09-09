@@ -6,6 +6,8 @@
 <body>
 
     <button id="getShipment">CLICK</button>
+    <ul>
+    </ul>
 
     <script>
         const btn = document.querySelector('#getShipment');
@@ -16,7 +18,10 @@
         { id: 5, price: 70, mass: 25, used: false },
         { id: 6, price: 8, mass: 3, used: false },
         { id: 7, price: 5, mass: 2, used: false },
-        { id: 8, price: 5, mass: 2, used: false }
+        { id: 8, price: 5, mass: 2, used: false },
+        { id: 9, price: 35, mass: 4, used: false },
+        { id: 10, price: 190, mass: 40, used: false },
+        { id: 11, price: 5, mass: 7, used: false }
         ];
         const maxCapacity = 104;
         var currentCapacity = 0;
@@ -58,6 +63,7 @@
                         }
                     }
                 }
+
                 sums.push(currentPrice);
 
                 currentPrice = 0;
@@ -82,7 +88,7 @@
         function makeUsed() {
             let maximum = findMaximum();
             let code = '';
-            let codeArray= [];
+            let codeArray = [];
 
             for (let i = 0; i < items.length; i++) {
                 if ((avg() * items.length) > maxCapacity) {
@@ -100,15 +106,16 @@
                     }
                 }
                 items[i].used = false;
+
                 if (currentPrice == maximum) {
                     console.log(codeArray);
-                    break;
+                    break;  
                 }
                 else {
-                    codeArray = [];
-                }
-                currentPrice = 0;
-                currentCapacity = 0;
+                    codeArray = [];         
+                }   
+                currentPrice = 0;       
+                currentCapacity = 0;    
 
             }
             for (let i = 0; i < boxes.length; i++) {
@@ -118,8 +125,14 @@
                     }
                 }
             }
+            for(let i=0;i<codeArray.length;i++){
+                let li=document.createElement('li');
+                li.textContent=codeArray[i];    
+                document.querySelector('ul').appendChild(li);
+            }
 
         }
+        
 
         function instertPackage() {
             for (let i = 0; i < boxes.length; i++) {
@@ -129,7 +142,7 @@
             }
         }
         function avg() {
-            let total = 0;
+            let total = 0;  
             for (let i = 0; i < items.length; i++) {
                 total += items[i].mass;
             }
